@@ -130,6 +130,7 @@ const FolderView = ({ folderData, main = false }) => {
                   textAlign: "left",
                 }}
               >
+                <span></span>{" "}
                 <input
                   type="checkbox"
                   checked={selectedRows.length === sortedData.length}

@@ -44,7 +44,7 @@ function renderTableRow(item, index) {
         </Link>
       </td>
       <td>{new Date(item?.TimeLastModified)?.toDateString()}</td>
-      <td>{item?.ItemCount || "N/A"}</td>
+      <td>{item?.ItemCount || 0}</td>
       <td>{item?.folderSize}</td>
     </tr>
   );
@@ -84,12 +84,26 @@ const FolderView = ({ folderData, main = false }) => {
         <table>
           <thead>
             <tr>
-              <th onClick={() => handleSort("Name")}>Name</th>
-              <th onClick={() => handleSort("TimeLastModified")}>
-                Date Modified
+              <th onClick={() => handleSort("Name")}>
+                Name {sortField === "Name" && sortOrder === "asc" && "↑"}
+                {sortField === "Name" && sortOrder === "desc" && "↓"}
               </th>
-              <th onClick={() => handleSort("ItemCount")}>Items</th>
-              <th onClick={() => handleSort("folderSize")}>File Size</th>
+              <th onClick={() => handleSort("TimeLastModified")}>
+                Date Modified{" "}
+                {sortField === "TimeLastModified" && sortOrder === "asc" && "↑"}
+                {sortField === "TimeLastModified" &&
+                  sortOrder === "desc" &&
+                  "↓"}
+              </th>
+              <th onClick={() => handleSort("ItemCount")}>
+                Items {sortField === "ItemCount" && sortOrder === "asc" && "↑"}
+                {sortField === "ItemCount" && sortOrder === "desc" && "↓"}
+              </th>
+              <th onClick={() => handleSort("folderSize")}>
+                File Size{" "}
+                {sortField === "folderSize" && sortOrder === "asc" && "↑"}
+                {sortField === "folderSize" && sortOrder === "desc" && "↓"}
+              </th>
             </tr>
           </thead>
           <tbody>

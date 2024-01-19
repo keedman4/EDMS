@@ -1,7 +1,6 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import style from "./styles.module.scss";
-import { uniqueId } from "lodash";
 
 function getFileType(item) {
   const fileExtension = item?.Name.substring(
@@ -64,6 +63,7 @@ function renderTableRow(item, index, selectedRows, handleRowSelect) {
   );
 }
 const FolderView = ({ folderData, main = false }) => {
+  const history = useHistory();
   const [sortField, setSortField] = React.useState(null);
   const [sortOrder, setSortOrder] = React.useState("asc");
   const [selectedRows, setSelectedRows] = React.useState([]);
@@ -120,6 +120,15 @@ const FolderView = ({ folderData, main = false }) => {
   return (
     <div className={style.detailsContainer}>
       <div className={style.detailsTable}>
+        <div className={style.topRow}>
+          <span onClick={() => history.goBack()}>&#8592; Go Back</span>
+          <div>
+            {selectedRows?.length > 0 && (
+              <span onClick={() => history.goBack()}>Delete</span>
+            )}
+            {!main && <span onClick={() => history.goBack()}>Upload File</span>}
+          </div>
+        </div>
         <table>
           <thead>
             <tr>
@@ -130,7 +139,6 @@ const FolderView = ({ folderData, main = false }) => {
                   textAlign: "left",
                 }}
               >
-                <span></span>{" "}
                 <input
                   type="checkbox"
                   checked={selectedRows.length === sortedData.length}

@@ -15,7 +15,15 @@
     margin: 20px auto;
     background-color: #fff;
   }
-
+  span {
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .topRow {
+    display: flex;
+    justify-content: space-between;
+  }
   table,
   th,
   td {

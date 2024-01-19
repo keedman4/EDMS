@@ -34,7 +34,7 @@ const SingleScreen = () => {
       <div className={style.navigation}>
         <TreeView />
       </div>
-      <FolderView folderData={folderData} />
+      <FolderView folderData={folderData} id={id} />
       {/* <DetailsListDocuments /> */}
       {/* <DocumentDetails /> */}
       {/* </div> */}

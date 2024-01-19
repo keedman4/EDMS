@@ -189,3 +189,25 @@ export async function useHomeFolders() {
     throw error;
   }
 }
+
+export async function useFileUpload(files) {
+  const { file, id } = files;
+  const promises = file.map(async (name, index) => {
+    try {
+      const response = await sp.web
+        .getFolderById(id)
+        .files.add(name.name, name, true);
+
+      const data = await response;
+
+      return data;
+    } catch (err) {
+      console.error("Error uploading photo:", err);
+      return { status: "rejected", reason: err };
+    }
+  });
+
+  const result = await Promise.all(promises);
+
+  return result;
+}

@@ -1,7 +1,9 @@
 import * as React from "react";
 import { Link, useHistory } from "react-router-dom";
 import style from "./styles.module.scss";
-
+import Modal from "../Modal";
+import ImageUpload from "../FileUpload/ImageUpload";
+import { useFileUpload } from "../../modules/treeview/func";
 function getFileType(item) {
   const fileExtension = item?.Name.substring(
     item.Name.lastIndexOf(".") + 1
@@ -62,11 +64,12 @@ function renderTableRow(item, index, selectedRows, handleRowSelect) {
     </tr>
   );
 }
-const FolderView = ({ folderData, main = false }) => {
+const FolderView = ({ folderData, main = false, id = "" }) => {
   const history = useHistory();
   const [sortField, setSortField] = React.useState(null);
   const [sortOrder, setSortOrder] = React.useState("asc");
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const [open, setOpen] = React.useState(false);
 
   const sortedData = main
     ? folderData.sort((a, b) =>
@@ -117,6 +120,13 @@ const FolderView = ({ folderData, main = false }) => {
     setSelectedRows([]);
   };
 
+  const handleChange = (name, files) => {
+    const fileArray = Array.from(files || []);
+
+    const fileUpload = { file: fileArray, id };
+    useFileUpload(fileUpload);
+  };
+
   return (
     <div className={style.detailsContainer}>
       <div className={style.detailsTable}>
@@ -126,7 +136,7 @@ const FolderView = ({ folderData, main = false }) => {
             {selectedRows?.length > 0 && (
               <span onClick={() => history.goBack()}>Delete</span>
             )}
-            {!main && <span onClick={() => history.goBack()}>Upload File</span>}
+            {!main && <span onClick={() => setOpen(!open)}>Upload File</span>}
           </div>
         </div>
         <table>
@@ -178,6 +188,20 @@ const FolderView = ({ folderData, main = false }) => {
             )}
           </tbody>
         </table>
+        <Modal
+          title="Upload File"
+          content={
+            <div>
+              <ImageUpload
+                name="Image"
+                onChange={handleChange}
+                label="Upload File"
+              />
+            </div>
+          }
+          isVisible={open}
+          onClose={() => setOpen(!open)}
+        />
       </div>
     </div>
   );

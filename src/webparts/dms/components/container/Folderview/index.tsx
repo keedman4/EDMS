@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import style from "./styles.module.scss";
+import { uniqueId } from "lodash";
 
 function getFileType(item) {
   const fileExtension = item?.Name.substring(
@@ -23,7 +24,7 @@ function getFileType(item) {
   }
 }
 
-function renderTableRow(item, index) {
+function renderTableRow(item, index, selectedRows, handleRowSelect) {
   const isFolder = item.hasOwnProperty("ItemCount");
 
   const fileType = getFileType(item);
@@ -37,6 +38,19 @@ function renderTableRow(item, index) {
 
   return (
     <tr key={index}>
+      <td
+        style={{
+          padding: "16px",
+          borderBottom: "1px solid rgba(224, 224, 224, 1)",
+          textAlign: "left",
+        }}
+      >
+        <input
+          type="checkbox"
+          checked={selectedRows.includes(item.UniqueId)}
+          onChange={(e) => handleRowSelect(item.UniqueId, e.target.checked)}
+        />
+      </td>
       <td>
         <Link to={linkTo}>
           <img src={iconSrc} alt={item?.Name} />
@@ -52,6 +66,7 @@ function renderTableRow(item, index) {
 const FolderView = ({ folderData, main = false }) => {
   const [sortField, setSortField] = React.useState(null);
   const [sortOrder, setSortOrder] = React.useState("asc");
+  const [selectedRows, setSelectedRows] = React.useState([]);
 
   const sortedData = main
     ? folderData.sort((a, b) =>
@@ -78,12 +93,54 @@ const FolderView = ({ folderData, main = false }) => {
     }
   };
 
+  const handleRowSelect = (rowId, isSelected) => {
+    const updatedSelectedRows = isSelected
+      ? [...selectedRows, rowId]
+      : selectedRows.filter((id) => id !== rowId);
+
+    setSelectedRows((prevSelectedRows) => {
+      if (isSelected) {
+        return [...prevSelectedRows, rowId];
+      } else {
+        return prevSelectedRows?.filter((id) => id !== rowId);
+      }
+    });
+    // onSelectedRowsChange(updatedSelectedRows);
+  };
+
+  const selectAllRows = () => {
+    const allRowIds = sortedData?.map((item) => item.UniqueId);
+    setSelectedRows(allRowIds);
+  };
+
+  const clearSelectedRows = () => {
+    setSelectedRows([]);
+  };
+
   return (
     <div className={style.detailsContainer}>
       <div className={style.detailsTable}>
         <table>
           <thead>
             <tr>
+              <th
+                style={{
+                  padding: "16px",
+                  borderBottom: "1px solid rgba(224, 224, 224, 1)",
+                  textAlign: "left",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedRows.length === sortedData.length}
+                  onChange={() =>
+                    selectedRows.length === sortedData.length
+                      ? clearSelectedRows()
+                      : selectAllRows()
+                  }
+                />
+              </th>
+
               <th onClick={() => handleSort("Name")}>
                 Name {sortField === "Name" && sortOrder === "asc" && "↑"}
                 {sortField === "Name" && sortOrder === "desc" && "↓"}
@@ -107,7 +164,9 @@ const FolderView = ({ folderData, main = false }) => {
             </tr>
           </thead>
           <tbody>
-            {sortedData.map((item, index) => renderTableRow(item, index))}
+            {sortedData.map((item, index) =>
+              renderTableRow(item, index, selectedRows, handleRowSelect)
+            )}
           </tbody>
         </table>
       </div>

@@ -13,6 +13,7 @@ import {
   useHomeFolders,
 } from "../treeview/func";
 import { Link } from "react-router-dom";
+import FolderView from "../../container/Folderview";
 
 const HomeScreen = () => {
   const [folders, setFolders] = React.useState([] as any);
@@ -34,40 +35,7 @@ const HomeScreen = () => {
       <div className={style.navigation}>
         <TreeView />
       </div>
-      <div className={style.detailsContainer}>
-        <div className={style.detailsTable}>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Date Modified</th>
-                <th>Items</th>
-                <th>File Size</th>
-              </tr>
-            </thead>
-            <tbody>
-              {folders?.map((item, i) => (
-                <tr key={i}>
-                  <td>
-                    <Link to={`/${item?.UniqueId}`}>
-                      <img
-                        src={
-                          "https://res-1.cdn.office.net/files/fabric-cdn-prod_20230815.002/assets/item-types/16/folder.svg"
-                        }
-                        alt={item?.Name}
-                      />
-                      {item?.Name}
-                    </Link>
-                  </td>
-                  <td>{new Date(item?.TimeLastModified)?.toDateString()}</td>
-                  <td>{item?.ItemCount}</td>
-                  <td>{item?.folderSize}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <FolderView folderData={folders} main={true} />
       {/* <DetailsListDocuments /> */}
       {/* <DocumentDetails /> */}
       {/* </div> */}

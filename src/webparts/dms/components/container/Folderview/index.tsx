@@ -49,27 +49,25 @@ function renderTableRow(item, index) {
     </tr>
   );
 }
-const FolderView = ({ folderData }) => {
+const FolderView = ({ folderData, main = false }) => {
   const [sortField, setSortField] = React.useState(null);
   const [sortOrder, setSortOrder] = React.useState("asc");
 
-  const sortedData = [
-    ...(folderData?.folders || []),
-    ...(folderData?.files || []),
-  ].sort((a, b) => {
-    if (sortField) {
-      const aValue = a[sortField];
-      const bValue = b[sortField];
+  const sortedData = main
+    ? folderData.sort((a, b) =>
+        compareValues(a[sortField], b[sortField], sortOrder)
+      )
+    : [...(folderData?.folders || []), ...(folderData?.files || [])].sort(
+        (a, b) => compareValues(a[sortField], b[sortField], sortOrder)
+      );
 
-      if (sortOrder === "asc") {
-        return aValue.localeCompare(bValue);
-      } else {
-        return bValue.localeCompare(aValue);
-      }
+  function compareValues(aValue, bValue, sortOrder) {
+    if (sortOrder === "asc") {
+      return aValue && bValue ? aValue.localeCompare(bValue) : 0;
+    } else {
+      return bValue && aValue ? bValue.localeCompare(aValue) : 0;
     }
-
-    return 0;
-  });
+  }
 
   const handleSort = (field) => {
     if (sortField === field) {

@@ -101,6 +101,10 @@ export async function useFetchFolders() {
 
 export async function useFolderData(folder) {
   const single = await sp.web.getFolderById(folder).get();
+  const folders = await sp.web.getFolderById(folder);
+  const folderDetails = await folders.expand("ModifiedBy").get();
+
+  console.log(folderDetails, "folderDetails");
   const folderItem = await sp.web.getFolderById(folder).folders.get();
   const visibleFolders = folderItem.filter(
     (subFolder) =>
@@ -135,5 +139,53 @@ export async function useFolderData(folder) {
         },
       },
     },
+    ...single,
   };
+}
+
+export async function useHomeFolders() {
+  try {
+    const webFolders = await sp.web.folders();
+    const rootFolder = await sp.web.rootFolder.get();
+    const files = await sp.web
+      .getFolderByServerRelativeUrl(rootFolder.ServerRelativeUrl)
+      .files.get();
+
+    // Get detailed information for each file
+    const filesWithDetails = await Promise.all(
+      files.map(async (file) => {
+        const fileItem = await sp.web.getFileById(file.UniqueId).get();
+        const fileSize = fileItem["Size"];
+        const modifiedBy = fileItem["ModifiedBy"];
+
+        return {
+          ...fileItem,
+          fileSize,
+          modifiedBy,
+        };
+      })
+    );
+
+    // Get detailed information for each web folder
+    const webFoldersWithDetails = await Promise.all(
+      webFolders.map(async (folder) => {
+        const folderItem = await sp.web.getFolderById(folder.UniqueId).get();
+        const folderSize = folderItem["Length"];
+        const modifiedBy = folderItem["ModifiedBy"];
+
+        return {
+          ...folderItem,
+          folderSize,
+          modifiedBy,
+        };
+      })
+    );
+
+    const all = [...webFoldersWithDetails, ...filesWithDetails];
+
+    return all;
+  } catch (error) {
+    console.error("Error fetching folders data:", error);
+    throw error;
+  }
 }

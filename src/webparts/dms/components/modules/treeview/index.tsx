@@ -10,7 +10,7 @@ import styles from "../../Dms.module.scss";
 const navigationStyles = {
   root: {
     height: "100vh",
-    width: "20%",
+    width: "100%",
     boxSizing: "border-box",
     border: "1px solid #eee",
     overflowY: "auto",
@@ -99,8 +99,6 @@ const TreeView = () => {
     };
     getItems();
   }, []);
-
-  console.log("folders", folders);
 
   return <Nav groups={links} selectedKey="key1" styles={navigationStyles} />;
 

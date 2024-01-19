@@ -1,0 +1,51 @@
+.detailsContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-basis: 50%;
+  background: rgb(253, 253, 253);
+}
+.detailsTable {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  padding: 0.5rem 2rem;
+  table {
+    width: 100%;
+    margin: 20px auto;
+    background-color: #fff;
+  }
+
+  table,
+  th,
+  td {
+    border: 1px solid white;
+    border-collapse: collapse;
+    padding: 15px;
+    text-align: left;
+    text-transform: capitalize;
+    font-size: 12px;
+
+    img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      margin-right: 1rem;
+    }
+    a {
+      text-decoration: none;
+      color: black;
+    }
+  }
+
+  table th {
+    background-color: #fff;
+    color: black;
+  }
+  td {
+    cursor: pointer;
+  }
+  td:hover {
+    background: whitesmoke;
+  }
+}

@@ -200,6 +200,7 @@ const FolderView = ({ folderData, main = false, id = "" }) => {
                 name="Image"
                 onChange={handleChange}
                 label="Upload File"
+                multiple={true}
               />
               <button onClick={submitHandler} className="btn btnBlue">
                 Upload File

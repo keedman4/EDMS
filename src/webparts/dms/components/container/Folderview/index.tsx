@@ -70,6 +70,7 @@ const FolderView = ({ folderData, main = false, id = "" }) => {
   const [sortOrder, setSortOrder] = React.useState("asc");
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [open, setOpen] = React.useState(false);
+  const [uploaded, setUploaded] = React.useState({});
 
   const sortedData = main
     ? folderData.sort((a, b) =>
@@ -123,10 +124,13 @@ const FolderView = ({ folderData, main = false, id = "" }) => {
   const handleChange = (name, files) => {
     const fileArray = Array.from(files || []);
 
-    const fileUpload = { file: fileArray, id };
-    useFileUpload(fileUpload);
+    const fileUpload = { file: fileArray, id } as any;
+    setUploaded(fileUpload);
   };
 
+  const submitHandler = async () => {
+    const data = await useFileUpload(uploaded);
+  };
   return (
     <div className={style.detailsContainer}>
       <div className={style.detailsTable}>
@@ -197,8 +201,12 @@ const FolderView = ({ folderData, main = false, id = "" }) => {
                 onChange={handleChange}
                 label="Upload File"
               />
+              <button onClick={submitHandler} className="btn btnBlue">
+                Upload File
+              </button>
             </div>
           }
+          size="medium"
           isVisible={open}
           onClose={() => setOpen(!open)}
         />

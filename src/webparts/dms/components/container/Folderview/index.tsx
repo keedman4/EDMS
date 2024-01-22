@@ -33,9 +33,7 @@ function renderTableRow(item, index, selectedRows, handleRowSelect) {
     ? "https://res-1.cdn.office.net/files/fabric-cdn-prod_20230815.002/assets/item-types/16/folder.svg"
     : `https://res-1.cdn.office.net/files/fabric-cdn-prod_20230815.002/assets/item-types/16/${fileType}.svg`;
 
-  const linkTo = isFolder
-    ? `/${item?.UniqueId}`
-    : `https://loctus.sharepoint.com/${item?.Name}`;
+  const linkTo = isFolder ? `/${item?.UniqueId}` : `/${item?.Name}`;
 
   return (
     <tr key={index}>
@@ -53,10 +51,17 @@ function renderTableRow(item, index, selectedRows, handleRowSelect) {
         />
       </td>
       <td>
-        <Link to={linkTo}>
-          <img src={iconSrc} alt={item?.Name} />
-          {item?.Name}
-        </Link>
+        {isFolder ? (
+          <Link to={linkTo}>
+            <img src={iconSrc} alt={item?.Name} />
+            {item?.Name}
+          </Link>
+        ) : (
+          <a href={linkTo}>
+            <img src={iconSrc} alt={item?.Name} />
+            {item?.Name}
+          </a>
+        )}
       </td>
       <td>{new Date(item?.TimeLastModified)?.toDateString()}</td>
       <td>{item?.ItemCount || 0}</td>
